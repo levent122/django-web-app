@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+{% load semanticui %}
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<!-- Google Fonts -->
+	<link href="{% static 'css/font.css' %}" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" />
+    <title>KAYIT OL</title>
+    <style>
+        html,body{
+            background-image: url("{% static 'img/bg.jpg' %}");
+            background-size: cover;
+            background-repeat: no-repeat;
+            height: 100%;
+            font-family: 'Numans', sans-serif;
+        }
+    </style>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}"/>
+	<link rel="stylesheet" href="{% static 'css/animate.css' %}"/>
+	<link rel="stylesheet" href="{% static 'css/owl.carousel.css' %}"/>
+	<link rel="stylesheet" href="{% static 'css/style.css' %}"/>
+</head>
+<body style="overflow: hidden">
+
+    {% include "parts/navbar.html" %}
+
+    <div class="ui centered grid">
+        <div style="margin-top: 150px;" class="six wide tablet six wide computer column">
+            <div style="width: 100%; box-shadow: 0px 5px 20px black" class="ui card">
+                <div class="content">
+                    <h3>Kayıt Ol</h3>
+                    <hr>
+                    <form method="POST" class="ui form">
+                        {% csrf_token %}
+                        {% render_form form %}
+                        <button type="submit" style="width:  100%" class="ui inverted primary button"><i class="address book icon"></i>Yeni Hesap Oluştur</button>
+                    </form>
+                </div>                                              
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
+    <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+	<script src="{% static 'js/bootstrap.min.js' %}"></script>
+	<script src="{% static 'js/owl.carousel.min.js' %}"></script>
+	<script src="{% static 'js/masonry.pkgd.min.js' %}"></script>
+	<script src="{% static 'js/magnific-popup.min.js' %}"></script>
+	<script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{% if messages %}
+    {% for message in messages %}
+    {% if message.tags == 'info' %}
+    <div class="ui mini red message">{{ message }}</div>
+    {% elif message.tags == 'success' %}
+    <div class="ui mini green message">{{ message }}</div>
+    {% endif %}
+    {% endfor %}
+{% endif %}

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+{% load static %}
+{% load humanize %}
+<html lang="en">
+<head>
+	<title>Ana Sayfa</title>
+	<meta charset="UTF-8">
+	<meta name="description" content="LERAMIZ Landing Page Template">
+	<meta name="keywords" content="LERAMIZ, unica, creative, html">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!-- Favicon -->   
+	<link href="img/favicon.ico" rel="shortcut icon"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<!-- Google Fonts -->
+	<link href="{% static 'css/font.css' %}" rel="stylesheet">
+
+	<!-- Stylesheets -->
+	<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}"/>
+	<link rel="stylesheet" href="{% static 'css/animate.css' %}"/>
+	<link rel="stylesheet" href="{% static 'css/owl.carousel.css' %}"/>
+	<link rel="stylesheet" href="{% static 'css/style.css' %}"/>
+
+</head>
+<body>
+	<!-- Page Preloder -->
+	<div id="preloder">
+		<div class="loader"></div>
+	</div>
+	
+	{% include "parts/navbar.html" %}
+	
+	<!-- Hero section -->
+	<section class="hero-section set-bg" data-setbg="{% static 'img/bg.jpg' %}">
+		<div class="container hero-text text-white">
+			<h2>HAYAT TARZINIZA UYGUN YAŞAM YERİNİZİ BULUN</h2>
+			<p>Leramiz.com® emlak emlak kayıtları, evler, kınamak, arazi ve daha fazlasını arayın.<br>En kapsamlı kaynak verilerinden mülk bilgilerini bulun.</p>
+			<a href="{% url 'products' %}" class="site-btn">DETAYARI GÖRÜNTÜLE</a>
+		</div>
+	</section>
+	<!-- Hero section end -->
+
+
+	<!-- Filter form section -->
+	<div class="filter-search">
+		<div class="container">
+			<form action="{% url 'search' %}" class="filter-form">
+				<input type="text" name="keywords" placeholder="Enter a street name, address number or keyword">
+				<select name="city">
+					<option selected="true" disabled="disabled" value="City">Şehir</option>
+					{% for key,value in city_choices.items %}
+                      <option value="{{ key }}"
+                      {% if key == values.city %}
+                        selected
+                      {% endif %}
+                      >{{ value }}</option>
+                    {% endfor %}
+				</select>
+				<select name="price">
+					<option selected="true" disabled="disabled" value="City">Fiyat</option>
+					{% for key,value in price_choices.items %}
+                      <option value="{{ key }}"
+                      {% if key == values.price %}
+                        selected
+                      {% endif %}
+                      >{{ value }}</option>
+                    {% endfor %}
+				</select>
+				<button type="submit" class="site-btn fs-submit">ARA</button>
+			</form>
+		</div>
+	</div>
+	<!-- Filter form section end -->
+
+	<!-- feature section -->
+	<section class="feature-section spad">
+		<div class="container">
+			<div class="section-title text-center">
+				<h3>SON ÖZELLİKLER</h3>
+				<p>Bölgenizdeki satılık yada kiralık konutlara göz atın</p>
+			</div>
+			<div class="row">
+				{% if products %}
+				
+				{% for product in products %}
+	
+				<div class="col-lg-4 col-md-6">
+					<!-- feature -->
+					<div class="feature-item">
+						<div class="feature-pic set-bg" data-setbg="{{ product.photo_main.url }}">
+							{% if product.status == 'Kiralık' %}
+							<div class="rent-notic">{{ product.status }}</div>
+							{% else %}
+							<div class="sale-notic">{{ product.status }}</div>
+							{% endif %}
+							<a href="{% url 'addlike' product.id %}" style="margin-left: 190px" class="far fa-heart fa-2x"></a>
+						</div>
+						<div class="feature-text">
+							<div class="text-center feature-title">
+								<h5>{{ product.title }}</h5>
+								<p><i class="fa fa-map-marker"></i> {{ product.city }}, {{ product.district }}</p>
+							</div>
+							<div class="room-info-warp">
+								<div class="room-info">
+									<div class="rf-left">
+										<p><i class="fa fa-th-large"></i> {{ product.sqft }} Square foot</p>
+										<p><i class="fa fa-bed"></i> {{ product.bedrooms }} Bedrooms</p>
+									</div>
+									<div class="rf-right">
+										<p><i class="fa fa-car"></i> {{ product.garage }} Garages</p>
+										<p><i class="fa fa-bath"></i> {{ product.bathrooms }} Bathrooms</p>
+									</div>	
+								</div>
+								<div class="room-info">
+									<div class="rf-left">
+										<p><a style="color: #707070;" style="color: #30caa0;" href=" {% url 'profile' product.realtor.user_id %}"><i class="fa fa-user"></i> {{ product.realtor }}</a></p>
+									</div>
+									<div class="rf-right">
+										<p><i class="fa fa-clock-o"></i> {{ product.date | timesince }}</p>
+									</div>	
+								</div>
+								<div class="room-info">
+									<div class="rf-left">
+										<p><a style="color: #707070;" style="color: #30caa0;" href=""><i class="fa fa-shopping-cart"></i> Sepete Ekle</a></p>
+									</div>
+									<div class="rf-right">
+										<p><a style="color: #707070;" href=""><i style="color: #30caa0;" class="far fa-credit-card"></i> Hemen Al</a></p>
+									</div>	
+								</div>
+							</div>
+							<a href="{% url 'detail' product.id %}" class="room-price">{{ product.price | intcomma }} ₺</a>
+						</div>
+					</div>
+				</div>
+				{% endfor %}
+				{% else %}
+				{% endif %}
+			</div>
+		</div>
+	</section>
+	<!-- feature section end -->
+
+	<div class="row">
+		<div class="offset-md-5">
+			<div class="site-pagination">
+				<div class="col-md-12">
+				  {% if products.has_other_pages %}
+					<ul class="pagination">
+					  {% if products.has_previous %}
+						<li class="page-item">
+						  <a href="?page={{products.previous_page_number}}" class="page-link">&laquo;</a>
+						</li>
+					  {% else %}
+						<li class="page-item disabled">
+						  <a class="page-link">&laquo;</a>
+						</li>
+					  {% endif %}
+					  {% for i in products.paginator.page_range %}
+						{% if products.number == i %}
+						  <li class="page-item active">
+							<a class="page-link">{{i}}</a>
+						  </li>
+						{% else %}
+						  <li class="page-item">
+							<a href="?page={{i}}" class="page-link">{{i}}</a>
+						  </li>
+						{% endif %}
+					  {% endfor %}
+					  {% if products.has_next %}
+						<li class="page-item">
+						  <a href="?page={{products.next_page_number}}" class="page-link">&raquo;</a>
+						</li>
+					  {% else %}
+						<li class="page-item disabled">
+						  <a class="page-link">&raquo;</a>
+						</li>
+					  {% endif %}
+					</ul>
+				  {% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<br><br>
+
+	<br><br>
+
+	<!-- Clients section -->
+	<div class="clients-section">
+		<div class="container">
+			<div class="clients-slider owl-carousel">
+				<a href="#">
+					<img src="{% static 'img/partner/1.png' %}" alt="">
+				</a>
+				<a href="#">
+					<img src="{% static 'img/partner/2.png' %}" alt="">
+				</a>
+				<a href="#">
+					<img src="{% static 'img/partner/3.png' %}" alt="">
+				</a>
+				<a href="#">
+					<img src="{% static 'img/partner/4.png' %}" alt="">
+				</a>
+				<a href="#">
+					<img src="{% static 'img/partner/5.png' %}" alt="">
+				</a>
+			</div>
+		</div>
+	</div>
+	<!-- Clients section end -->
+
+
+
+	<!-- Footer section -->
+	<footer class="footer-section set-bg" data-setbg="{% static 'img/footer-bg.jpg' %}">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-3 col-md-6 footer-widget">
+					<img src="{% static 'img/logo.png' %}" alt="">
+					<p>Lorem ipsum dolo sit azmet, consecter dipise consult  elit. Maecenas mamus antesme non anean a dolor sample tempor nuncest erat.</p>
+					<div class="social">
+						<a href="#"><i class="fa fa-facebook"></i></a>
+						<a href="#"><i class="fa fa-twitter"></i></a>
+						<a href="#"><i class="fa fa-instagram"></i></a>
+						<a href="#"><i class="fa fa-pinterest"></i></a>
+						<a href="#"><i class="fa fa-linkedin"></i></a>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6 footer-widget">
+					<div class="contact-widget">
+						<h5 class="fw-title">CONTACT US</h5>
+						<p><i class="fa fa-map-marker"></i>3711-2880 Nulla St, Mankato, Mississippi </p>
+						<p><i class="fa fa-phone"></i>(+88) 666 121 4321</p>
+						<p><i class="fa fa-envelope"></i>info.leramiz@colorlib.com</p>
+						<p><i class="fa fa-clock-o"></i>Mon - Sat, 08 AM - 06 PM</p>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6 footer-widget">
+					<div class="double-menu-widget">
+						<h5 class="fw-title">POPULAR PLACES</h5>
+						<ul>
+							<li><a href="">Florida</a></li>
+							<li><a href="">New York</a></li>
+							<li><a href="">Washington</a></li>
+							<li><a href="">Los Angeles</a></li>
+							<li><a href="">Chicago</a></li>
+						</ul>
+						<ul>
+							<li><a href="">St Louis</a></li>
+							<li><a href="">Jacksonville</a></li>
+							<li><a href="">San Jose</a></li>
+							<li><a href="">San Diego</a></li>
+							<li><a href="">Houston</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6  footer-widget">
+					<div class="newslatter-widget">
+						<h5 class="fw-title">NEWSLETTER</h5>
+						<p>Subscribe your email to get the latest news and new offer also discount</p>
+						<form class="footer-newslatter-form">
+							<input type="text" placeholder="Email address">
+							<button><i class="fa fa-send"></i></button>
+						</form>
+					</div>
+				</div>
+			</div>
+			<div class="footer-bottom">
+				<div class="footer-nav">
+					<ul>
+						<li><a href="">Home</a></li>
+						<li><a href="">Featured Listing</a></li>
+						<li><a href="">About us</a></li>
+						<li><a href="">Pages</a></li>
+						<li><a href="">Blog</a></li>
+						<li><a href="">Contact</a></li>
+					</ul>
+				</div>
+				<div class="copyright">
+					<p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
+				</div>
+			</div>
+		</div>
+	</footer>
+	<!-- Footer section end -->
+                                        
+	<!--====== Javascripts & Jquery ======-->
+	<script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+	<script src="{% static 'js/bootstrap.min.js' %}"></script>
+	<script src="{% static 'js/owl.carousel.min.js' %}"></script>
+	<script src="{% static 'js/masonry.pkgd.min.js' %}"></script>
+	<script src="{% static 'js/magnific-popup.min.js' %}"></script>
+	<script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>
